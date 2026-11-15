@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Load, clean, and model BLS Consumer Expenditure Survey (Interview) microdata"
 requires-python = ">=3.11"
 dependencies = [
+    "matplotlib>=3.8",
     "numpy>=1.26",
     "pandas>=2.2",
     "pyarrow>=16",
@@ -13,7 +14,10 @@ dependencies = [
 cex = "cex.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -21,3 +25,17 @@ build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["realdata: uses the real BLS file in data/raw/ (skipped when it is absent)"]
+
+[tool.ruff]
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+# zip() without strict=: most zips here pair lists built from the same source.
+ignore = ["B905"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["cex"]
+known-local-folder = ["conftest"]
